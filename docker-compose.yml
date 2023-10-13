@@ -7,7 +7,8 @@ services:
         ports:
             - 80:80
         volumes:
-            # 如果需要新增網站就在此處將config檔以read only的方式mount進去/etc/nginx/conf.d中
+            # 如果需要新增網站就在此處將config檔以read only的方式bind mount進去/etc/nginx/conf.d中
+            # - Host_file_path:Container_file_path:ro
             - ./nginx.conf/setting/test1.conf:/etc/nginx/conf.d/test1.conf:ro
             - ./nginx.conf/setting/test2.conf:/etc/nginx/conf.d/test2.conf:ro
             
@@ -22,8 +23,7 @@ services:
             WORDPRESS_DB_NAME: exampledb
         volumes:
             - wordpress_test1:/var/www/html
-        
-        
+
     db_test1:
         image: mysql:5.7
         restart: always
