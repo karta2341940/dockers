@@ -7,6 +7,7 @@ services:
         ports:
             - 80:80
         volumes:
+            # 如果需要新增網站就在此處將config檔以read only的方式mount進去/etc/nginx/conf.d中
             - ./nginx.conf/setting/test1.conf:/etc/nginx/conf.d/test1.conf:ro
             - ./nginx.conf/setting/test2.conf:/etc/nginx/conf.d/test2.conf:ro
             
@@ -14,23 +15,24 @@ services:
     wordpress_test1:
         image: wordpress
         restart: always
-        ports:
-            - 8081:80
         environment:
             WORDPRESS_DB_HOST: db_test1
-            WORDPRESS_DB_USER: exampleuser
-            WORDPRESS_DB_PASSWORD: examplepass
+            WORDPRESS_DB_USER: $TEST1_DB_ACCOUND
+            WORDPRESS_DB_PASSWORD: $TEST1_DB_PASSWORD
             WORDPRESS_DB_NAME: exampledb
         volumes:
             - wordpress_test1:/var/www/html
-
+        
+        
     db_test1:
         image: mysql:5.7
         restart: always
+        ports:
+            - 3306:3306
         environment:
             MYSQL_DATABASE: exampledb
-            MYSQL_USER: exampleuser
-            MYSQL_PASSWORD: examplepass
+            MYSQL_USER: $TEST1_DB_ACCOUND
+            MYSQL_PASSWORD: $TEST1_DB_PASSWORD
             MYSQL_RANDOM_ROOT_PASSWORD: '1'
         volumes:
             - db_test1:/var/lib/mysql
@@ -38,12 +40,10 @@ services:
     wordpress_test2:
         image: wordpress
         restart: always
-        ports:
-            - 8082:80
         environment:
             WORDPRESS_DB_HOST: db_test2
-            WORDPRESS_DB_USER: exampleuser
-            WORDPRESS_DB_PASSWORD: examplepass
+            WORDPRESS_DB_USER: $TEST2_DB_ACCOUND
+            WORDPRESS_DB_PASSWORD: $TEST2_DB_PASSWORD
             WORDPRESS_DB_NAME: exampledb
         volumes:
             - wordpress_test2:/var/www/html
@@ -53,8 +53,8 @@ services:
         restart: always
         environment:
             MYSQL_DATABASE: exampledb
-            MYSQL_USER: exampleuser
-            MYSQL_PASSWORD: examplepass
+            MYSQL_USER: $TEST2_DB_ACCOUND
+            MYSQL_PASSWORD: $TEST2_DB_PASSWORD
             MYSQL_RANDOM_ROOT_PASSWORD: '1'
         volumes:
             - db_test2:/var/lib/mysql
